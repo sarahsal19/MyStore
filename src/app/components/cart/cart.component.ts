@@ -13,19 +13,30 @@ export class CartComponent implements OnInit {
   
   @Output() onRemoveCartItem: EventEmitter<Product> = new EventEmitter();
 
-  fullName: string = '';
-
-  address: string = '';
-
-  creditCardNumber: string = '';
-
   products: Product[] = [];
 
+  fullName: string = '';
+  address: string = '';
+  creditCardNumber: string = '';
+
   isEmpty: boolean = true;
-
   total: number = 0;
-
   quantity: number = 0;
+
+  constructor(
+    private cartService: CartService,
+    private router: Router,
+    private confirmationService: ConfirmationService
+  ) {}
+
+  ngOnInit(): void {
+    this.products = this.cartService.getProductsInCart();
+
+    if (this.products.length !== 0) {
+      this.isEmpty = false;
+      this.total =  this.cartService.getCartAmount(this.products)
+    }
+  }
 
   onChange = (e: any, product: Product) => {
     this.products = this.cartService.changeInCart(e, product);
@@ -36,12 +47,6 @@ export class CartComponent implements OnInit {
     }
   };
 
-  constructor(
-    private cartService: CartService,
-    private router: Router,
-    private confirmationService: ConfirmationService
-  ) {}
-
   // onQuantityChange() {
   //   if (this.quantity == 0) {
   //     this.onRemoveCartItem.emit(this.product);
@@ -49,16 +54,6 @@ export class CartComponent implements OnInit {
   //     this.cartService.updateQuantity(this.product, this.quantity);
   //   }
   // }
-  ngOnInit(): void {
-    this.products = this.cartService.getProductsInCart();
-
-    if (this.products.length !== 0) {
-      this.isEmpty = false;
-      this.total =  this.cartService.getCartAmount(this.products)
-    }
-  }
-
-
 
   submitConfirmationForm = () => {
     const paymentInfo = {

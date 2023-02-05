@@ -1,32 +1,29 @@
 import { Injectable } from '@angular/core';
 import { Product } from '../models/product';
+
 @Injectable({
   providedIn: 'root',
 })
 export class CartService {
   public productListInCart: Product[] = [];
-
-  constructor() {}
+  
 
   getProductsInCart() {
     return this.productListInCart;
   }
 
   addToCart(quantity: number, product: Product) {
-    const checkProductExist = this.productListInCart.filter(
-      (p) => p.id === product.id
+    const existingProduct = this.productListInCart.filter(
+      (p) => { return p.id == product.id }
     );
-    if (checkProductExist.length !== 0) {
-      const priorQuantity = parseInt(
-        checkProductExist[0]['quantity'] as unknown as string
-      );
-      const addQuantity =
-        priorQuantity + parseInt(quantity as unknown as string);
-      checkProductExist[0]['quantity'] = addQuantity;
-      this.productListInCart = this.productListInCart
-        .filter((p) => p.id !== product.id)
-        .concat(checkProductExist);
+    if (existingProduct.length > 0 ) {
+        const newQuantity =
+        existingProduct[0].quantity! + parseInt(quantity as unknown as string);
+
+        existingProduct[0]['quantity'] = newQuantity;
+
       return this.productListInCart;
+
     } else {
       const quantityToInt = parseInt(quantity as unknown as string);
       product['quantity'] = quantityToInt;
@@ -41,21 +38,22 @@ export class CartService {
       alert(`The item will be removed from cart!`);
       return afterDeleteInCart;
     } else {
-      this.productListInCart = this.productListInCart.map((p) => {
-        if (p.id === product.id) {
-          p['quantity'] = parseInt(quantity as unknown as string);
+      this.productListInCart = this.productListInCart.map((prod) => {
+        if (prod.id == product.id) {
+          prod['quantity'] = quantity;
         }
-        return p;
+        return prod;
       });
       return this.productListInCart;
     }
   }
 
   getCartAmount(products: Product[] ): number{
-   return products.reduce((pre, curr) => {
-      const currNum =
-        curr.price * parseInt(curr.quantity as unknown as string);
-      return pre + currNum;
+   return products.reduce((pre, current) => {
+      const currentAmount =
+      current.price * parseInt(current.quantity as unknown as string);
+      let  total: number = pre + currentAmount;
+      return total;
     }, 0);
   }
 
