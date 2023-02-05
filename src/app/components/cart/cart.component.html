@@ -1,1 +1,25 @@
-<p>cart works!</p>
+<h2 *ngIf="isEmpty" class="empty-cart-message">There is no product in the cart.</h2>
+<div *ngIf="!isEmpty" class="cart-container">
+  <div class="cart-panel">
+  <div class="cart-item" *ngFor="let product of products">
+    <img src="{{ product.url }}">
+    <div class="cart-item-details">
+      <p>{{ product.name }}</p>
+      <p>${{ product.price }}</p>
+      <label>Amount:</label>
+      <input class="number-input " type="number" max="100" ngModel="{{product.quantity}}" (ngModelChange)="onChange($event, product)">
+    </div>
+  </div>
+  <h3>Total: {{ total }}</h3>
+  </div>
+  <form class="cart-panel form-margin" #form="ngForm" (ngSubmit)="submitConfirmationForm()">
+    <p>Full Name:</p>
+    <input type="text" name="fullName" required minlength="3" maxlength="50" placeholder="Minimum 3 characters" [(ngModel)]="fullName">
+    <p>Address:</p>
+    <input type="text" name="address" required minlength="6" maxlength="200" placeholder="Minimum 6 characters" [(ngModel)]="address">
+    <p>Credit Card Number:</p>
+    <input type="text" name="creditCardNumber" required minlength="16" maxlength="16" placeholder="16 digits number" [(ngModel)]="creditCardNumber">
+    <p>We'll never share your payment infomation with anyone.</p>
+    <input type="submit" [disabled]="form.invalid" value="Submit">
+  </form>
+</div>

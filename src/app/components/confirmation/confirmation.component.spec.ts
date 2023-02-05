@@ -11,7 +11,9 @@ describe('ConfirmationComponent', () => {
       declarations: [ ConfirmationComponent ]
     })
     .compileComponents();
+  });
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(ConfirmationComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
