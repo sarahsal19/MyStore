@@ -3,6 +3,7 @@ import { ProductsService } from '../../services/products.service';
 import { Product } from '../../models/product';
 import { ActivatedRoute } from '@angular/router';
 import { CartService } from '../../services/cart.service';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-product-item-detail',
@@ -18,15 +19,23 @@ export class ProductItemDetailComponent implements OnInit {
 
   constructor(
     private productsService: ProductsService,
-    private router: ActivatedRoute,
+    private route: ActivatedRoute,
     private cartService: CartService
   ) {}
 
   ngOnInit(): void {
-    let id = this.router.snapshot.paramMap.get('id') as unknown as number;
-    this.productsService.getProductById(id).subscribe((data) => {
-      this.product = data as Product;
-    });
+    let name = this.route.snapshot.params['productName'];
+
+    this.cartService.productListInCart.filter((p) => p.name.toUpperCase() === name.toUpperCase());
+
+    const promise = this.productsService
+      .getAllProducts()
+      .pipe(
+        map((products) => products.filter((item) => item.name.toUpperCase() === name.toUpperCase()))
+      )
+      .toPromise();
+
+    promise.then((data) => (this.product = data![0]));
   }
 
   public addToCart(product: Product) {

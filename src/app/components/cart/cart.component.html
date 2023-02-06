@@ -7,7 +7,10 @@
       <p>{{ product.name }}</p>
       <p>${{ product.price }}</p>
       <label>Amount:</label>
-      <input class="number-input " type="number" max="100" ngModel="{{product.quantity}}" (ngModelChange)="onChange($event, product)">
+      <!-- <input class="number-input" type="number" max="1" ngModel="{{product.quantity}}" (ngModelChange)="onChange($event, product)"> -->
+      <select class="select-input" ngModel="{{product.quantity}}">
+        <option *ngFor="let option of options">{{option}}</option>
+      </select>
     </div>
   </div>
   <h3>Total: {{ total }}</h3>
@@ -18,8 +21,8 @@
     <p>Address:</p>
     <input type="text" name="address" required minlength="6" maxlength="200" placeholder="Minimum 6 characters" [(ngModel)]="address">
     <p>Credit Card Number:</p>
-    <input type="text" name="creditCardNumber" required minlength="16" maxlength="16" placeholder="16 digits number" [(ngModel)]="creditCardNumber">
-    <p>We'll never share your payment infomation with anyone.</p>
+    <input type="number" name="creditCardNumber" required maxlength="16" oninput="this.value=this.value.slice(0,this.maxLength)" placeholder="16 digits number" [(ngModel)]="creditCardNumber">
+    <p>We'll never share your payment information with anyone.</p>
     <input type="submit" [disabled]="form.invalid" value="Submit">
   </form>
 </div>

@@ -15,11 +15,13 @@ export class CartComponent implements OnInit {
 
   products: Product[] = [];
 
+  public options = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   fullName: string = '';
   address: string = '';
   creditCardNumber: string = '';
 
   isEmpty: boolean = true;
+  inNum: boolean = true;
   total: number = 0;
   quantity: number = 0;
 
